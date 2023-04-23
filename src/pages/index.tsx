@@ -1,102 +1,81 @@
 
-import { Inter } from 'next/font/google'
 import Number from '../components/Number'
 import Grid from '@mui/material/Grid'
-import { Box, Container } from '@mui/material'
+import { Container } from '@mui/material'
 import RaffleForm from '../components/RaffleForm'
+import * as React from 'react';
+import getTickets from '@/helpers/getTickets';
 
-
-const listNumber = [
-  {
-    id: 1,
-    status: "disponible"
-  },
-  {
-    id: 2,
-    status: "disponible"
-  },
-  {
-    id: 3,
-    status: "disponible"
-  },
-  {
-    id: 4,
-    status: "disponible"
-  },
-  {
-    id: 5,
-    status: "disponible"
-  },
-  {
-    id: 6,
-    status: "disponible"
-  },
-  {
-    id: 7,
-    status: "ocupado"
-  },
-  {
-    id: 8,
-    status: "ocupado"
-  },
-  {
-    id: 9,
-    status: "disponible"
-  },
-  {
-    id: 10,
-    status: "disponible"
-  },
-  {
-    id: 11,
-    status: "no-disponible"
-  },
-  {
-    id: 12,
-    status: "disponible"
-  },
-  {
-    id: 13,
-    status: "ocupado"
-  },
-  {
-    id: 14,
-    status: "disponible"
-  },
-  {
-    id: 15,
-    status: "disponible"
-  },
-]
-
-
-
+interface Ticket {
+  number: number
+  status: string
+}
 
 export default function Home() {
+  const [listNumber, setListNumber] = React.useState<Ticket[]>([]);
+  const [tickets, setTickets] = React.useState<number[]>([]);
 
+  React.useEffect(() => {
+
+    getTickets().then((list) => {
+      setListNumber(list);
+    })
+  }, [])
+
+  const ticketSelected = (num: number) => {
+
+    if (tickets.includes(num))
+      setTickets([...tickets.filter((e) => e !== num)])
+
+    else
+      setTickets([...tickets, num])
+
+  }
+
+  function dropTickets(numbers:Ticket[]) {
+    if (numbers.length)
+      return numbers.map(e =>
+        <Grid item key={e.number} className='item-grid'>
+          <div onClick={() => ticketSelected(e.number)}>
+            <Number value={e.number} status={e.status} />
+          </div>
+
+        </Grid>
+      )
+    return <div>
+              <h1>Hubo un problema al cargar las rifas</h1>
+              <p>recargue la pagina</p>
+          </div>
+  }
   return (
     <>
-    
-    <Container maxWidth="md" sx={{ my:20}} >
-      <h1 className='title'>Elige tu rifa</h1>
-      <Container maxWidth="sm">
-        
-      <Grid container alignItems='center'>
 
-        { listNumber.map(e => 
-            <Grid item key={e.id} className='item-grid'>
-              <Number value={e.id} status={e.status} />
-            </Grid>
-          )
-        }
-      </Grid>
+      <Container maxWidth="md"  >
+        <h1 className='title'>Elige tu rifa</h1>
+        <Container maxWidth="sm" sx={{ justifyContent: 'center' }}>
+          <Grid container >
+            {dropTickets(listNumber)}
+          </Grid>
+        </Container>
+
+        <Container sx={{ display: 'flex', justifyContent: 'center' }} maxWidth="sm">
+          <Grid container spacing={1}>
+
+            {
+              tickets.map(num_ticket =>
+                <Grid item key={num_ticket}>
+                  <div className='container-image'>
+                    <img className='image-ticket ' src="/ticket.png" alt="Ticket icon" width="100" height="100" />
+                    <div className='sello-ticket'>{num_ticket}</div>
+                  </div>
+                </Grid>
+              )
+            }
+          </Grid>
+        </Container>
+        <RaffleForm />
       </Container>
-      <img src="/ticket.svg" alt="Ticket icon" width="100" height="100" />
-      <RaffleForm/>
-    </Container>
-    
-    </>
-    
 
+    </>
   )
 }

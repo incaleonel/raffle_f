@@ -106,9 +106,16 @@ a {
   }
 }
 .title{
-  padding-bottom: 5rem;
+  padding-top:3rem;
+  padding-bottom: 3rem;
   font-size:7rem;
   text-align: center;
+}
+@media screen and (max-width: 700px) {
+  .title {
+    padding-bottom: 2rem;
+    font-size: 3rem;
+  }
 }
 .ticket{
   width:3rem;
@@ -126,18 +133,39 @@ a {
   background-color: rgb(0, 132, 0);
   
 }
-.disponible:hover{
+@media (min-width:768px){
+  .disponible:hover{
   position:relative;
   width: 2.8rem;
   height:2.8rem;
 }
-.no-disponible{
-  background-color: yellow;
-  color:black;
 }
-.ocupado{
+
+.reservado{
+  background-color: yellow;
+  color:black;    
+}
+.vendido{
   background-color: rgb(197, 0, 0);
   
+}
+.disponible.select{
+  background: linear-gradient(-45deg, #f5f5f5, #d4d4d4, #f5f5f5, #c5c5c5, #f5f5f5, #cececd, #f5f5f5); 
+  background-size: 400% 400%;
+  color:black;
+  animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 .item-grid{
   display: flex;
@@ -145,4 +173,54 @@ a {
   min-height: 3rem;
   align-items: center;
   justify-content: center;
+}
+
+
+.sello-ticket{
+  position:absolute;
+  color:black;
+  font-size: 2rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.image-ticket {
+  position: relative;
+
+  height: 100px;
+  transform: rotate(90deg);
+  
+}
+.container-image{
+  position: relative;
+  text-align: center;
+  
+   /* ajusta la altura de acuerdo a tus necesidades */
+   animation: fade-in 1s ease-in-out; /* animación de 0.5 segundos */
+}
+@media (max-width:700px){
+  .image-ticket{
+    height: 80px;
+    width:80px
+  }
+}
+
+
+@keyframes fade-in {
+  from {
+    transform: rotateX(89deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0);/* rota la imagen 180 grados en el eje Y */
+    opacity: 1;
+  }
+  
+}
+
+  
+
+#label-upload{
+  display: inline;
 }
