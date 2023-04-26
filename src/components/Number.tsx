@@ -1,3 +1,5 @@
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { RootState } from '../redux/store';
 import * as React from 'react';
 
 interface Props {
@@ -6,14 +8,11 @@ interface Props {
     
 }
 export default function Number({value, status}:Props) {
-  const [select, setSelect] = React.useState<boolean>(false);
   
-  const handleClick = ()=>{
-    setSelect(!select);
-  }
-
-  return (
-    <div className={'ticket ' + status +(select?' select': '')} onClick={handleClick}  >
+  const tickets = useAppSelector((state:RootState)=> state.selected.tickets)
+  
+  return (  
+    <div className={'ticket ' + status +(tickets.includes(value)?' select': '')}  >
       {value}
     </div>
   )

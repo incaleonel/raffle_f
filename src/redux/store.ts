@@ -3,7 +3,7 @@ import selectReducer from './selectSlice';
 
 const store = configureStore({
     reducer:{
-        select: selectReducer,
+        selected: selectReducer,
     },
 });
 

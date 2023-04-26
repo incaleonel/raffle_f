@@ -2,9 +2,12 @@ import { useState} from 'react';
 import * as React from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { pink, orange } from '@mui/material/colors';
-import { Button, TextField, Stack, FormControl, InputLabel, Select, MenuItem,Box} from '@mui/material';
+import { Button, TextField, Stack, Box} from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
+import { useAppSelector } from '../redux/hooks';
+import { RootState } from '../redux/store';
+
 
 const theme = createTheme({
   palette: {
@@ -23,8 +26,7 @@ export default function RaffleForm() {
   const [email, setEmail] = useState('');
   const [instagramUsername, setInstagramUsername] = useState('');
   const [file, setFile] = useState<File>();
-  const [amount, setAmount] = useState('');
-
+  const tickets = useAppSelector((state:RootState)=> state.selected.tickets)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -34,15 +36,14 @@ export default function RaffleForm() {
 
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(file) 
-    const data = { firstName, lastName, email, instagramUsername, file, amount};
+    
+    const data = { firstName, lastName, email, instagramUsername, file, tickets};
     const response = await axios.post('http://192.168.0.102:3001/api/check', data);
-    console.log(response.data);
     setFirstName('');
     setLastName('');
     setEmail('');
     setInstagramUsername('');
-    setAmount('');
+    
   };
   const styleInput = {
       bgcolor: 'rgba(255,255,255,0.3)', borderRadius: '4px', "& label": {
@@ -89,20 +90,7 @@ export default function RaffleForm() {
             value={instagramUsername}
             onChange={(event) => setInstagramUsername(event.target.value)}
           />
-          <FormControl  fullWidth sx={{bgcolor: 'rgba(255,255,255,0.3)', borderRadius: '4px' }}>
-            <InputLabel id="demo-simple-select-label">Comprar</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={amount}
-              label="Amount"
-              onChange={event=>setAmount(event.target.value)}
-            >
-              <MenuItem value={1}>1 Rifa</MenuItem>
-              <MenuItem value={2}>2 Rifas</MenuItem>
-              <MenuItem value={3}>3 Rifas</MenuItem>
-            </Select>
-          </FormControl>
+          
           <input
             type="file"
             accept="image/*, application/pdf"
