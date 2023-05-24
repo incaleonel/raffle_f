@@ -1,22 +1,22 @@
 
-import { Container } from '@mui/material'
-import RaffleForm from '../components/RaffleForm'
-import * as React from 'react';
-import { Provider } from 'react-redux';
-import  store from '../redux/store';
-import TableRaffle from '../components/TableRaffle';
+import { Container, Button } from '@mui/material'
 
-
+import Init from '@/components/Init';
+import { useAppSelector } from '@/redux/hooks';
+import { RootState } from '../redux/store';
+import Transference from '@/components/Transference';
 export default function Home() {
-  
+  const tabs = useAppSelector((state:RootState)=>state.tab.tabs)
+  console.log(tabs)
   return (
-    <Provider store={store}>
+    
 
-      <Container maxWidth="md"  >
-        <TableRaffle/>
-        <RaffleForm />
-      </Container>
+    <Container maxWidth='md' className='payment-method shadow-drop-center' >
 
-    </Provider>
+      {tabs.init && <Init/>}
+      {tabs.transference && <Transference/>}
+
+    </Container>
+
   )
 }

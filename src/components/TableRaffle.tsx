@@ -1,33 +1,35 @@
 import { Container, Grid } from "@mui/material";
-import Number from './Number'
-import * as React from 'react';
-import getTickets from '../helpers/getTickets';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { ticketsSelected } from '../redux/selectSlice';
-import { RootState } from "@/redux/store";
+import Number from './Number';
+import {useEffect} from 'react';
 
-interface Ticket {
-    number: number
-    status: string
-  }
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { ticketsReset, ticketsSelected } from '../redux/selectSlice';
+import { RootState } from "@/redux/store";
+import {Ticket, getTickets}  from "../helpers/getTickets";
+
+
   
 export default function TableRaffle() {
-    const [listNumber, setListNumber] = React.useState<Ticket[]>([]);
-  
-  const tickets = useAppSelector((state:RootState)=> state.selected.tickets)
+  const tickets = useAppSelector((state:RootState)=> state.selected.tickets);
+  const listNumber = useAppSelector((state:RootState)=> state.selected.listNumber);
+
   const dispatch = useAppDispatch();
-  React.useEffect(() => {
+  useEffect(() => {
 
     getTickets().then((list) => {
-      setListNumber(list);
+      dispatch(ticketsReset(list));
     })
+    
+    console.log('entro en useeffect')
   }, [])
-
-  function dropTickets(numbers:Ticket[]) {
+  
+  const dropTickets = (numbers:Ticket[])=> {
     if (numbers.length)
       return numbers.map(e =>
         <Grid item key={e.number} className='item-grid'>
-          <div onClick={() => dispatch(ticketsSelected(e.number))}>
+          <div onClick={() => 
+          {if(e.status==='disponible')
+            dispatch(ticketsSelected(e.number))}}>
             <Number value={e.number} status={e.status} />
           </div>
 
@@ -41,7 +43,6 @@ export default function TableRaffle() {
     return (
         
         <>
-            <h1 className='title'>Elige tu rifa</h1>
             <Container maxWidth="sm" sx={{ justifyContent: 'center', mb:3}}>
                 <Grid container >
                     {dropTickets(listNumber)}

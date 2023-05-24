@@ -1,6 +1,5 @@
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppSelector } from '../redux/hooks';
 import { RootState } from '../redux/store';
-import * as React from 'react';
 
 interface Props {
     value:number;

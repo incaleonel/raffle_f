@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import selectReducer from './selectSlice';
+import tabReducer from './tabSlice';
 
 const store = configureStore({
     reducer:{
         selected: selectReducer,
+        tab: tabReducer
     },
 });
 

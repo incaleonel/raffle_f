@@ -1,6 +1,12 @@
+    
+export interface Ticket {
+    number: number
+    status: string
+  }
 
- const getTickets = async() =>{
-    const url = 'http://192.168.0.102:3001/api/rifas'
+export const getTickets = async() =>{
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/raffles`;
+    
     try{
        const res = await fetch(url);
         console.log(res);
@@ -14,4 +20,3 @@
     
 }
 
-export default getTickets;
