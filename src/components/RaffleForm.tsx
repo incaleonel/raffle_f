@@ -1,7 +1,6 @@
-import { useState,forwardRef} from 'react';
+import { useState, forwardRef } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { orange } from '@mui/material/colors';
-import { Button, TextField, Stack, Box, Snackbar } from '@mui/material';
+import { Button, TextField, Stack, Snackbar, Box } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
@@ -23,7 +22,7 @@ const theme = createTheme({
       main: '#FFF',
     },
     secondary: {
-      main: orange[500],
+      main: '#0fa8bfd1',
     },
   },
 });
@@ -84,82 +83,95 @@ export default function RaffleForm() {
     handleClick();
   };
   const styleInput = {
-    bgcolor: 'rgba(255,255,255,0.3)', borderRadius: '4px', "& label": {
-      color: "white"
+    bgcolor: '#000000', borderRadius: '4px', "& label": {
+      color: "#fbae09"
     },
     "& input": {
-      color: "white"
+      color: "#cccccc"
     }
   }
 
   return (
-    <Box sx={{ my: 3 }}>
+    <ThemeProvider theme={theme}>
 
-      <ThemeProvider theme={theme}>
+      <form onSubmit={handleSubmit} >
+        <Stack spacing={1} sx={{ maxWidth: 500, mx: 'auto' }}>
+          <Stack spacing={1} direction="row" useFlexGap flexWrap="wrap">
+            <Box sx={{w:'100%'}}>
 
-        <form onSubmit={handleSubmit} >
-          <Stack spacing={1}>
             <TextField
               label="Nombre"
+              color='secondary'
+              variant='filled'
               fullWidth
               sx={styleInput}
               value={firstName}
               onChange={(event) => setFirstName(event.target.value)}
             />
+            </Box>
+            <Box sx={{w:'100%'}}>
+              
             <TextField
               label="Apellido"
+              color='secondary'
+              variant='filled'
               fullWidth
               sx={styleInput}
               value={lastName}
               onChange={(event) => setLastName(event.target.value)}
             />
-            <TextField
-              type='email'
-              label="Correo electrónico"
-              fullWidth
-              sx={styleInput}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <TextField
-              label="Usuario de Instagram"
-              fullWidth
-              sx={styleInput}
-              value={instagramUsername}
-              onChange={(event) => setInstagramUsername(event.target.value)}
-            />
-            <input
-              type="file"
-              accept="image/*, application/pdf"
-              id="file-upload"
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
-            <div>
-              <label htmlFor="file-upload" id='label-upload'>
-                <Button
-                  variant="contained"
-                  component="div"
-                  startIcon={<CloudUploadIcon />}
-                  sx={{ bgcolor: 'rgba(255,255,255,0.3)', borderRadius: '4px', borderColor: 'green' }}
-                >
-                  Subir Comprobante
-                </Button>
-              </label>
-            </div>
-
-            {file && <p>Archivo seleccionado: {file.name}</p>}
-            <Button type="submit" variant="contained"  >
-              Enviar
-            </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                Sus Rifas han sido reservadas!.
-              </Alert>
-            </Snackbar>
+            </Box>
           </Stack>
-        </form>
-      </ThemeProvider>
-    </Box>
+          <TextField
+            type='email'
+            color='secondary'
+            variant='filled'
+            label="Correo electrónico"
+            fullWidth
+            sx={styleInput}
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <TextField
+            label="Usuario de Instagram"
+            variant='filled'
+            color='secondary'
+            fullWidth
+            sx={styleInput}
+            value={instagramUsername}
+            onChange={(event) => setInstagramUsername(event.target.value)}
+          />
+          <input
+            type="file"
+            accept="image/*, application/pdf"
+            id="file-upload"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          <div>
+            <label htmlFor="file-upload" id='label-upload'>
+              <Button
+                variant="contained"
+                component="div"
+                startIcon={<CloudUploadIcon />}
+                sx={{ bgcolor: '#fbae09', my: 2 }}
+              >
+                Subir Comprobante
+              </Button>
+            </label>
+          </div>
+
+          {file && <p>Archivo seleccionado: {file.name}</p>}
+          <Button type="submit" variant="outlined" color='secondary' sx={{ my: 10 }}>
+            Enviar
+          </Button>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              Sus Rifas han sido reservadas!.
+            </Alert>
+          </Snackbar>
+        </Stack>
+      </form>
+    </ThemeProvider>
   );
 }

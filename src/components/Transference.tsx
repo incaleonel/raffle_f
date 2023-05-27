@@ -7,8 +7,8 @@ function Transference() {
 
         
 
-        <Container maxWidth="md" >
-            <h1 className='title'>Elige tu rifa</h1>
+        <Container maxWidth='md' sx={{py:3}}>
+            <h1 className='title tracking-in-contract'>Elige tu rifa</h1>
             <TableRaffle />
             <RaffleForm />
 

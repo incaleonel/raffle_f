@@ -11,7 +11,7 @@ export default function Number({value, status}:Props) {
   const tickets = useAppSelector((state:RootState)=> state.selected.tickets)
   
   return (  
-    <div className={'ticket ' + status +(tickets.includes(value)?' select': '')}  >
+    <div className={'ticket ' + status +(tickets.includes(value)?' jello-vertical select ': '')}  >
       {value}
     </div>
   )
