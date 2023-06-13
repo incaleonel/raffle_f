@@ -1,4 +1,5 @@
 import { Button, Container } from '@mui/material'
+import Image from 'next/image';
 import Link from 'next/link';
 export default function Init() {
 
@@ -10,16 +11,16 @@ export default function Init() {
       <h1 className='title tracking-in-expand-forward-top'>Elige un metodo de pago</h1>
       <div className='group-buttons'>
         <Link className='link' href="/method/mercadopago">
-          <Button className='buttonp slide-right' variant='contained'/* onClick={()=>dispatch(setTab('mercadopago'))} */>
-            <img className='iconButton' src='mp.png' alt='icono de transferencia' />
+          <Button className='buttonp slide-right' variant='contained'>
+            <Image  className='iconButton ' width={200} height={200} src='/mp.png' alt='icono de transferencia' />
             Mercadopago
           </Button>
         </Link>
         <Link className='link' href="/method/transference">
           <Button className='buttonp slide-left' variant='contained' /* onClick={()=>dispatch(setTab('transference'))} */>
-            <div className='iconButton'>
+            <div className='iconButton '>
 
-              <img src='transfer.png' alt='icono de transferencia' className='transfer-icon' />
+              <Image className='transfer-icon' width={200} height={200} src='/transfer.png' alt='icono de transferencia'  />
             </div>
             Transferencia
           </Button>

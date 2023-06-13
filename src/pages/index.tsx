@@ -4,7 +4,6 @@
 import Link from 'next/link';
 import Button from '@mui/material/Button'
 import { useEffect } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material';
 import Image from 'next/image';
 
 export default function Home() {

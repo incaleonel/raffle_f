@@ -161,11 +161,14 @@ a {
   display:flex;
   align-items: center;
   height: 200px;
+  width: auto;
   margin:auto;
+  overflow: hidden;
 }
 .transfer-icon{
   display: block;
   height:150px;
+  width: auto;
   margin:auto auto;
 }
 

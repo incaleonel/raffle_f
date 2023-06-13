@@ -1,26 +1,26 @@
 import { Container, Grid, Skeleton } from "@mui/material";
 import Number from './Number';
 import {useEffect} from 'react';
-
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ticketsReset, ticketsSelected } from '../redux/selectSlice';
 import { RootState } from "@/redux/store";
 import {Ticket, getTickets}  from "../helpers/getTickets";
+import Image from "next/image";
 
 
   
 export default function TableRaffle() {
   const tickets = useAppSelector((state:RootState)=> state.selected.tickets);
   const listNumber = useAppSelector((state:RootState)=> state.selected.listNumber);
-
   const dispatch = useAppDispatch();
+  
   useEffect(() => {
-
+    
     getTickets().then((list) => {
       dispatch(ticketsReset(list));
     })
   
-  }, [])
+  }, [dispatch])
   
   const dropTickets = (numbers:Ticket[])=> {
     if (numbers.length)
@@ -53,7 +53,7 @@ export default function TableRaffle() {
                         tickets.map(num_ticket =>
                             <Grid item key={num_ticket}>
                                 <div className='container-image rotate-scale-up-diagonal-left'>
-                                    <img className='image-ticket ' src="/ticket.png" alt="Ticket icon" width="100" height="100" />
+                                    <Image className='image-ticket ' src="/ticket.png" alt="Ticket icon" width="100" height="100" />
                                     <div className='sello-ticket'>{num_ticket}</div>
                                 </div>
                             </Grid>
