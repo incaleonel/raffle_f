@@ -15,6 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
       secondary: {
         main: '#0fa8bfd1',
       },
+      info:{
+        main: '#fff'
+      }
     },
   });
   return <>
