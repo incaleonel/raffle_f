@@ -141,21 +141,12 @@ a {
   height: 70%;
   
 }
-.buttonp{
-  display:flex;
-  width: 100%;
-  flex-direction: column;
-  color: rgba(255, 155, 24, 0.999);
-  font-size: 1.6rem;
-  font-weight:700;
-}
+
 .link{
   width: 100%;
   margin: 10px;
 }
-.buttonp:hover{
-  background-color: rgb(255, 255, 255);
-}
+
 .iconButton{ 
   display:flex;
   align-items: center;
