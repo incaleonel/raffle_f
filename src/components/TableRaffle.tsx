@@ -19,8 +19,7 @@ export default function TableRaffle() {
     getTickets().then((list) => {
       dispatch(ticketsReset(list));
     })
-    
-    console.log('entro en useeffect')
+  
   }, [])
   
   const dropTickets = (numbers:Ticket[])=> {
@@ -48,7 +47,7 @@ export default function TableRaffle() {
             </Container>
 
             <Container  maxWidth="sm">
-                <Grid container spacing={1} sx={{ display: 'flex', justifyContent: 'center', paddingBottom:2}}>
+                <Grid container spacing={1} sx={{ display: 'flex', justifyContent: 'center', minHeight:{xs:90, md:125}}}>
 
                     {
                         tickets.map(num_ticket =>

@@ -1,13 +1,14 @@
-import { useState, forwardRef } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Button, TextField, Stack, Snackbar, Box } from '@mui/material';
+import { useState, forwardRef, useEffect } from 'react';
+import { Button, TextField, Stack, Snackbar, Grid, FormHelperText } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import axios from 'axios';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { RootState } from '../redux/store';
 import { ticketsReset } from '../redux/selectSlice';
 import { getTickets } from '@/helpers/getTickets';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { Form, sendForm } from '@/helpers/sendForm';
+import { getLinkCheckout } from '@/helpers/getLinkCheckout';
+
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -16,18 +17,28 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#FFF',
+const styleInput = {
+
+  "& label": {
+    color: "#fbae09"
+  },
+  "& input": {
+    color: "#cccccc"
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: "#fbae09",
     },
-    secondary: {
-      main: '#0fa8bfd1',
+    '&.Mui-focused fieldset': {
+      borderColor: '#0fa8bfd1',
     },
   },
-});
+}
 
-export default function RaffleForm() {
+interface Props {
+  receipt?: boolean;
+}
+export default function RaffleForm({ receipt = true }: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -37,7 +48,14 @@ export default function RaffleForm() {
   const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
+  const [helperText, setHelperText] = useState(false);
 
+  const [urlMP, setUrlMP] = useState<string>('');
+  useEffect(() => {
+
+    getLinkCheckout(tickets.length).then(res => setUrlMP(res)).catch(err => console.log(err));
+
+  }, [tickets])
   const handleClick = () => {
     setOpen(true);
   };
@@ -59,119 +77,147 @@ export default function RaffleForm() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const fd = new FormData();
-    const ticketAsJSON = JSON.stringify(tickets);
-    if (file) {
-      fd.append('firstName', firstName);
-      fd.append('lastName', lastName);
-      fd.append('email', email);
-      fd.append('instagramUsername', instagramUsername);
-      fd.append('tickets', ticketAsJSON);
-      fd.append('file', file);
+
+    const form: Form = {
+      firstName,
+      lastName,
+      email,
+      instagramUsername,
+      tickets,
+      file
     }
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/raffles`, fd);
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setInstagramUsername('');
-    setFile(undefined);
+    try {
+      if (firstName && lastName && email && instagramUsername && (file || !receipt) && tickets.length != 0) {
+        await sendForm(form);
 
-    const list = await getTickets();
-    dispatch(ticketsReset(list))
-    console.log(response);
-    handleClick();
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setInstagramUsername('');
+        setFile(undefined);
+
+        handleClick();
+        const list = await getTickets();
+        dispatch(ticketsReset(list))
+        if(!receipt){
+          window.open(urlMP, '_blank');
+        }
+      } else {
+        setHelperText(true);
+      }
+      
+    } catch (err) {
+      console.log('RaffleForm ', err)
+    }
   };
-  const styleInput = {
-    bgcolor: '#000000', borderRadius: '4px', "& label": {
-      color: "#fbae09"
-    },
-    "& input": {
-      color: "#cccccc"
-    }
-  }
 
   return (
-    <ThemeProvider theme={theme}>
+    
 
       <form onSubmit={handleSubmit} >
         <Stack spacing={1} sx={{ maxWidth: 500, mx: 'auto' }}>
-          <Stack spacing={1} direction="row" useFlexGap flexWrap="wrap">
-            <Box sx={{w:'100%'}}>
 
-            <TextField
-              label="Nombre"
-              color='secondary'
-              variant='filled'
-              fullWidth
-              sx={styleInput}
-              value={firstName}
-              onChange={(event) => setFirstName(event.target.value)}
-            />
-            </Box>
-            <Box sx={{w:'100%'}}>
-              
-            <TextField
-              label="Apellido"
-              color='secondary'
-              variant='filled'
-              fullWidth
-              sx={styleInput}
-              value={lastName}
-              onChange={(event) => setLastName(event.target.value)}
-            />
-            </Box>
-          </Stack>
+
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6}>
+
+              <TextField
+                error={(!firstName && helperText) as boolean}
+                helperText={helperText && (firstName ? '' : 'Escribe tu nombre')}
+                className='slide-right'
+                label="Nombre"
+                color='secondary'
+                variant='outlined'
+                fullWidth
+                sx={styleInput}
+                value={firstName}
+                onChange={(event) => { setHelperText(false); setFirstName(event.target.value) }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+
+              <TextField
+                error={(!lastName && helperText) as boolean}
+                helperText={helperText && (lastName ? '' : 'Escribe tu apellido')}
+                className='slide-left'
+                label="Apellido"
+                color='secondary'
+                variant='outlined'
+                fullWidth
+                sx={styleInput}
+                value={lastName}
+                onChange={(event) => { setHelperText(false); setLastName(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
           <TextField
+            error={(!email && helperText) as boolean}
+            helperText={helperText && (email ? '' : 'Escribe tu correo electrónico')}
+            className='slide-right'
             type='email'
             color='secondary'
-            variant='filled'
+            variant='outlined'
             label="Correo electrónico"
             fullWidth
             sx={styleInput}
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => { setHelperText(false); setEmail(event.target.value) }}
           />
           <TextField
+            error={(!instagramUsername && helperText) as boolean}
+            helperText={helperText && (instagramUsername ? '' : 'Completa este campo')}
+            className='slide-left'
             label="Usuario de Instagram"
-            variant='filled'
+            variant='outlined'
             color='secondary'
             fullWidth
             sx={styleInput}
             value={instagramUsername}
-            onChange={(event) => setInstagramUsername(event.target.value)}
+            onChange={(event) => { setHelperText(false); setInstagramUsername(event.target.value) }}
           />
-          <input
-            type="file"
-            accept="image/*, application/pdf"
-            id="file-upload"
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-          <div>
-            <label htmlFor="file-upload" id='label-upload'>
-              <Button
-                variant="contained"
-                component="div"
-                startIcon={<CloudUploadIcon />}
-                sx={{ bgcolor: '#fbae09', my: 2 }}
-              >
-                Subir Comprobante
-              </Button>
-            </label>
-          </div>
+          {
+            receipt && <div>
+              <input
+                type="file"
+                accept="image/*, application/pdf"
+                id="file-upload"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              <div>
+                <label htmlFor="file-upload" id='label-upload'>
+                  <Button
+                    className='slide-right'
+                    variant="contained"
+                    component="div"
+                    startIcon={<CloudUploadIcon />}
+                    color={file || !helperText ? 'primary' : 'error'}
+                  >
+                    Subir Comprobante
+                  </Button>
+                  <FormHelperText error>{helperText && 'Suba el comprobante.'}</FormHelperText>
+                </label>
+              </div>
+            </div>
+          }
 
           {file && <p>Archivo seleccionado: {file.name}</p>}
-          <Button type="submit" variant="outlined" color='secondary' sx={{ my: 10 }}>
+          {<Button
+            className='slide-left'
+            type="submit"
+            variant="contained"
+            color='secondary'
+            sx={{ my: 10 }}>
             Enviar
-          </Button>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          </Button> }
+          <Snackbar open={open} onClose={handleClose} autoHideDuration={9000}>
             <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
               Sus Rifas han sido reservadas!.
             </Alert>
           </Snackbar>
         </Stack>
       </form>
-    </ThemeProvider>
+    
   );
 }
