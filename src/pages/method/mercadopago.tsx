@@ -6,6 +6,7 @@ export default function Mercadopago(){
   
   return (
     <Container maxWidth='md' sx={{py:3}}>
+      <h1 className='title tracking-in-contract'>Elige tu rifa</h1>
       <TableRaffle/>
       <RaffleForm receipt={false}/>
     </Container>

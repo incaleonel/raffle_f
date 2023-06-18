@@ -94,13 +94,13 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
+          <Typography   
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
+              fontSize:'0.8rem',
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
               fontFamily: 'monospace',
