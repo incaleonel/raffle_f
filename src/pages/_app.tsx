@@ -3,8 +3,10 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
-import {Box, Container} from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material';
+import ResponsiveAppBar from '@/components/ResponsiveAppBar';
+import Footer from '@/components/Footer';
 
 export default function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
@@ -15,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
       secondary: {
         main: '#0fa8bfd1',
       },
-      info:{
+      info: {
         main: '#fff'
       }
     },
@@ -28,17 +30,19 @@ export default function App({ Component, pageProps }: AppProps) {
       <title> dbs.argentina </title>
     </Head>
     <Provider store={store}>
-      <ThemeProvider  theme={theme}>
-        <Box sx={{ minHeight: '100vh', py: 5, display: 'flex', alignItems: 'center' }}>
+      <ThemeProvider theme={theme}>
+        <ResponsiveAppBar />
+        <Box sx={{ minHeight: '70vh', my: 4, display: 'flex', alignItems: 'center' }}>
 
-        <Container maxWidth='md' className='box shadow-drop-center' >
+          <Container maxWidth='md' className='box shadow-drop-center' >
 
-          <Component {...pageProps} />
-        </Container>
-      </Box>
+            <Component {...pageProps} />
+          </Container>
+        </Box>  
+        <Footer companyName="DBS.Argentina" year={new Date().getFullYear()} />
       </ThemeProvider>
-      
-      
+
+
     </Provider>
   </>
 }
